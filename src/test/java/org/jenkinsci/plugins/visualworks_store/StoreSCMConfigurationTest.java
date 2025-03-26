@@ -41,7 +41,7 @@ public class StoreSCMConfigurationTest {
     public JenkinsRule j = new JenkinsRule();
 
     @Test
-    void testGlobalConfigurationRoundtrip() throws Exception {
+    void testGlobalConfigurationRoundtrip(JenkinsRule r) throws Exception {
         StoreSCM.DescriptorImpl descriptor = j.jenkins.getDescriptorByType(StoreSCM.DescriptorImpl.class);
 
         descriptor.setStoreScripts(new StoreScript("7.7.1", "/path/to/script-7.7.1"),
@@ -58,7 +58,7 @@ public class StoreSCMConfigurationTest {
     }
 
     @Test
-    void testBasicConfigurationRoundtrip() throws Exception {
+    void testBasicConfigurationRoundtrip(JenkinsRule r) throws Exception {
         StoreSCM.DescriptorImpl descriptor = j.jenkins.getDescriptorByType(StoreSCM.DescriptorImpl.class);
         descriptor.setStoreScripts(new StoreScript("theScript", "path"));
 
@@ -76,7 +76,7 @@ public class StoreSCMConfigurationTest {
     }
 
     @Test
-    void testConfigurationRoundtripWithMultiplePundles() throws Exception {
+    void testConfigurationRoundtripWithMultiplePundles(JenkinsRule r) throws Exception {
         StoreSCM.DescriptorImpl descriptor = j.jenkins.getDescriptorByType(StoreSCM.DescriptorImpl.class);
         descriptor.setStoreScripts(new StoreScript("theScript", "path"));
 
@@ -89,7 +89,7 @@ public class StoreSCMConfigurationTest {
     }
 
     @Test
-    void testConfigurationRoundtripWithParcelBuilderFile() throws Exception {
+    void testConfigurationRoundtripWithParcelBuilderFile(JenkinsRule r) throws Exception {
         StoreSCM scm = new StoreSCM("script", "Repo", onePundle(), "\\d+", "Integrated", true, "theFilename");
         StoreSCM loaded = doRoundtripConfiguration(scm);
 
@@ -98,7 +98,7 @@ public class StoreSCMConfigurationTest {
     }
 
     @Test
-    void testLookupStoreScript() {
+    void testLookupStoreScript(JenkinsRule r) {
         StoreSCM.DescriptorImpl descriptor = j.jenkins.getDescriptorByType(StoreSCM.DescriptorImpl.class);
         final StoreScript script = new StoreScript("otherScript", "otherPath");
         descriptor.setStoreScripts(new StoreScript("theScript", "path"), script);
