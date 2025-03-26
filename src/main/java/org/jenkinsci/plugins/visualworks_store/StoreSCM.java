@@ -34,7 +34,7 @@ import hudson.util.ArgumentListBuilder;
 import hudson.util.ListBoxModel;
 import net.sf.json.JSONObject;
 import org.kohsuke.stapler.DataBoundConstructor;
-import org.kohsuke.stapler.StaplerRequest;
+import org.kohsuke.stapler.StaplerRequest2;
 
 import java.io.File;
 import java.io.IOException;
@@ -337,7 +337,7 @@ public class StoreSCM extends SCM {
         }
 
         @Override
-        public boolean configure(StaplerRequest req, JSONObject json) throws FormException {
+        public boolean configure(StaplerRequest2 req, JSONObject json) throws FormException {
             final List<StoreScript> scriptList = req.bindParametersToList(StoreScript.class, "script.");
             storeScripts = scriptList.toArray(new StoreScript[scriptList.size()]);
             save();
