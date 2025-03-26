@@ -28,12 +28,14 @@ import hudson.model.FreeStyleProject;
 import org.junit.jupiter.api.Test;
 import org.jvnet.hudson.test.JenkinsRule;
 import org.junit.Rule;
+import org.jvnet.hudson.test.junit.jupiter.WithJenkins;
 
 import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@WithJenkins
 public class StoreSCMConfigurationTest {
     @Rule
     public JenkinsRule j = new JenkinsRule();
