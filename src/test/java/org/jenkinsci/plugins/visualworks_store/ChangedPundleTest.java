@@ -25,42 +25,42 @@
 package org.jenkinsci.plugins.visualworks_store;
 
 import hudson.scm.EditType;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class ChangedPundleTest {
+class ChangedPundleTest {
 
     @Test
-    public void convertsAddedActionToEditTypeADD() {
+    void convertsAddedActionToEditTypeADD() {
         ChangedPundle pundle = new ChangedPundle("added", PundleType.PACKAGE, "pundleName", "42");
 
         assertEquals(EditType.ADD, pundle.getEditType());
     }
 
     @Test
-    public void convertsDeletedActionToEditTypeDELETE() {
+    void convertsDeletedActionToEditTypeDELETE() {
         ChangedPundle pundle = new ChangedPundle("deleted", PundleType.PACKAGE, "pundleName");
 
         assertEquals(EditType.DELETE, pundle.getEditType());
     }
 
     @Test
-    public void convertsModifiedActionToEditTypeEDIT() {
+    void convertsModifiedActionToEditTypeEDIT() {
         ChangedPundle pundle = new ChangedPundle("edited", PundleType.PACKAGE, "pundleName", "42");
 
         assertEquals(EditType.EDIT, pundle.getEditType());
     }
 
     @Test
-    public void constructsPundleDescriptor() {
+    void constructsPundleDescriptor() {
         ChangedPundle pundle = new ChangedPundle("edited", PundleType.PACKAGE, "pundleName", "42");
 
         assertEquals("Package pundleName (42)", pundle.getDescriptor());
     }
 
     @Test
-    public void omitsVersionFromPundleDescriptorOnDeletedPundle() {
+    void omitsVersionFromPundleDescriptorOnDeletedPundle() {
         ChangedPundle pundle = new ChangedPundle("deleted", PundleType.BUNDLE,
                 "pundleName");
 
@@ -68,7 +68,7 @@ public class ChangedPundleTest {
     }
 
     @Test
-    public void usesDescriptorAsPath() {
+    void usesDescriptorAsPath() {
         ChangedPundle pundle = new ChangedPundle("edited", PundleType.PACKAGE, "pundleName", "42");
 
         assertEquals("Package pundleName (42)", pundle.getPath());

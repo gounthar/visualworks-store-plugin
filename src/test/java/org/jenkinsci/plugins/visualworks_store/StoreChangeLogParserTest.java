@@ -24,7 +24,7 @@
 
 package org.jenkinsci.plugins.visualworks_store;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.xml.sax.SAXException;
 
 import java.io.File;
@@ -33,14 +33,14 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.*;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class StoreChangeLogParserTest {
+class StoreChangeLogParserTest {
     @Test
-    public void parsesEmptyChangelogFile() throws SAXException, IOException, URISyntaxException {
+    void parsesEmptyChangelogFile() throws SAXException, IOException, URISyntaxException {
         StoreChangeLogSet changes = parse("changelog_empty.xml");
-        assertTrue("changeset should be empty", changes.isEmptySet());
+        assertTrue(changes.isEmptySet(), "changeset should be empty");
     }
 
     private StoreChangeLogSet parse(String filename) throws IOException, SAXException, URISyntaxException {
@@ -51,17 +51,17 @@ public class StoreChangeLogParserTest {
     }
 
     @Test
-    public void parsesSingleDeletion() throws IOException, SAXException, URISyntaxException {
+    void parsesSingleDeletion() throws IOException, SAXException, URISyntaxException {
         StoreChangeLogSet changes = parse("changelog_singleDeletion.xml");
 
         List<StoreChangeLogEntry> entries = changes.getEntries();
 
-        assertEquals("entry count", 1, entries.size());
+        assertEquals(1, entries.size(), "entry count");
 
         StoreChangeLogEntry entry = entries.get(0);
-        assertEquals("commit message", "Pundles no longer used", entry.getMsg());
-        assertEquals("committer should be empty", "", entry.getCommitter());
-        assertEquals("entry timestamp should be zero", 0, entry.getTimestamp());
+        assertEquals("Pundles no longer used", entry.getMsg(), "commit message");
+        assertEquals("", entry.getCommitter(), "committer should be empty");
+        assertEquals(0, entry.getTimestamp(), "entry timestamp should be zero");
 
         ChangedPundle pundle = new ChangedPundle("deleted",
                 PundleType.PACKAGE, "MyPundle");
@@ -69,21 +69,21 @@ public class StoreChangeLogParserTest {
     }
 
     @Test
-    public void parsesSingleAddition() throws IOException, SAXException, URISyntaxException {
+    void parsesSingleAddition() throws IOException, SAXException, URISyntaxException {
         StoreChangeLogSet changes = parse("changelog_singleAddition.xml");
 
         List<StoreChangeLogEntry> entries = changes.getEntries();
 
-        assertEquals("entry count", 1, entries.size());
+        assertEquals(1, entries.size(), "entry count");
 
         StoreChangeLogEntry entry = entries.get(0);
         Calendar expected = new GregorianCalendar(TimeZone.getTimeZone("GMT"));
         expected.set(2012, Calendar.JULY, 2, 15, 40, 19);
         expected.set(Calendar.MILLISECOND, 123);
 
-        assertEquals("commit message", "Commit comment.", entry.getMsg());
-        assertEquals("committer", "committer", entry.getCommitter());
-        assertEquals("timestamp", expected.getTime().getTime(), entry.getTimestamp());
+        assertEquals("Commit comment.", entry.getMsg(), "commit message");
+        assertEquals("committer", entry.getCommitter(), "committer");
+        assertEquals(expected.getTime().getTime(), entry.getTimestamp(), "timestamp");
 
         ChangedPundle pundle = new ChangedPundle("added",
                 PundleType.PACKAGE, "MyPundle", "42");
@@ -91,39 +91,39 @@ public class StoreChangeLogParserTest {
     }
 
     @Test
-    public void parsesMultipleBlessingsAsMultipleEntries() throws IOException, SAXException, URISyntaxException {
+    void parsesMultipleBlessingsAsMultipleEntries() throws IOException, SAXException, URISyntaxException {
         StoreChangeLogSet changes = parse("changelog_multipleBlessings.xml");
         List<StoreChangeLogEntry> entries = changes.getEntries();
 
-        assertEquals("entry count", 3, entries.size());
+        assertEquals(3, entries.size(), "entry count");
 
-        assertEquals("first author", "User 1", entries.get(0).getCommitter());
-        assertEquals("second author", "User 2", entries.get(1).getCommitter());
-        assertEquals("third author", "User 1", entries.get(2).getCommitter());
+        assertEquals("User 1", entries.get(0).getCommitter(), "first author");
+        assertEquals("User 2", entries.get(1).getCommitter(), "second author");
+        assertEquals("User 1", entries.get(2).getCommitter(), "third author");
 
-        assertEquals("first comment", "First comment.", entries.get(0).getMsg());
-        assertEquals("second comment", "Comment the second.", entries.get(1).getMsg());
-        assertEquals("third comment", "Other comment.", entries.get(2).getMsg());
+        assertEquals("First comment.", entries.get(0).getMsg(), "first comment");
+        assertEquals("Comment the second.", entries.get(1).getMsg(), "second comment");
+        assertEquals("Other comment.", entries.get(2).getMsg(), "third comment");
 
         ChangedPundle pundle = new ChangedPundle("edited",
                 PundleType.PACKAGE, "MyPundle", "42");
         String expectedPath = pundle.getDescriptor();
-        assertTrue("first paths", entries.get(0).getAffectedPaths().contains(expectedPath));
-        assertTrue("second paths", entries.get(1).getAffectedPaths().contains(expectedPath));
-        assertTrue("third paths", entries.get(2).getAffectedPaths().contains(expectedPath));
+        assertTrue(entries.get(0).getAffectedPaths().contains(expectedPath), "first paths");
+        assertTrue(entries.get(1).getAffectedPaths().contains(expectedPath), "second paths");
+        assertTrue(entries.get(2).getAffectedPaths().contains(expectedPath), "third paths");
     }
 
     @Test
-    public void parsesMultiplePundlesWithDifferentCommentsAsMultipleEntries()
+    void parsesMultiplePundlesWithDifferentCommentsAsMultipleEntries()
             throws IOException, SAXException, URISyntaxException {
         StoreChangeLogSet changes = parse("changelog_multiplePundles.xml");
         List<StoreChangeLogEntry> entries = changes.getEntries();
 
-        assertEquals("entry count", 3, entries.size());
+        assertEquals(3, entries.size(), "entry count");
 
-        assertEquals("first comment", "First comment.", entries.get(0).getMsg());
-        assertEquals("second comment", "Pundles no longer used", entries.get(1).getMsg());
-        assertEquals("third comment", "Other comment.", entries.get(2).getMsg());
+        assertEquals("First comment.", entries.get(0).getMsg(), "first comment");
+        assertEquals("Pundles no longer used", entries.get(1).getMsg(), "second comment");
+        assertEquals("Other comment.", entries.get(2).getMsg(), "third comment");
 
         ChangedPundle addedPundle = new ChangedPundle("added",
                 PundleType.PACKAGE, "AddedPundle", "42");
@@ -132,16 +132,16 @@ public class StoreChangeLogParserTest {
         ChangedPundle modifiedPundle = new ChangedPundle("edited",
                 PundleType.BUNDLE, "ModifiedPundle", "58");
 
-        assertTrue("first paths", entries.get(0).getAffectedPaths().contains
-                (addedPundle.getDescriptor()));
-        assertTrue("second paths", entries.get(1).getAffectedPaths().contains
-                (deletedPundle.getDescriptor()));
-        assertTrue("third paths", entries.get(2).getAffectedPaths().contains
-                (modifiedPundle.getDescriptor()));
+        assertTrue(entries.get(0).getAffectedPaths().contains
+                (addedPundle.getDescriptor()), "first paths");
+        assertTrue(entries.get(1).getAffectedPaths().contains
+                (deletedPundle.getDescriptor()), "second paths");
+        assertTrue(entries.get(2).getAffectedPaths().contains
+                (modifiedPundle.getDescriptor()), "third paths");
     }
 
     @Test
-    public void mergesEntriesWithIdenticalComments() throws IOException, SAXException, URISyntaxException {
+    void mergesEntriesWithIdenticalComments() throws IOException, SAXException, URISyntaxException {
         StoreChangeLogSet changes = parse("changelog_identicalComments.xml");
         List<StoreChangeLogEntry> entries = changes.getEntries();
 
@@ -149,14 +149,14 @@ public class StoreChangeLogParserTest {
         expectedTimestamp.set(2012, Calendar.JULY, 2, 15, 40, 19);
         expectedTimestamp.set(Calendar.MILLISECOND, 123);
 
-        assertEquals("entry count", 3, entries.size());
+        assertEquals(3, entries.size(), "entry count");
 
-        assertEquals("first comment", "First comment.", entries.get(0).getMsg());
-        assertEquals("second comment", "Pundles no longer used", entries.get(1).getMsg());
-        assertEquals("third comment", "Other comment.", entries.get(2).getMsg());
+        assertEquals("First comment.", entries.get(0).getMsg(), "first comment");
+        assertEquals("Pundles no longer used", entries.get(1).getMsg(), "second comment");
+        assertEquals("Other comment.", entries.get(2).getMsg(), "third comment");
 
-        assertEquals("timestamp of deleted entry", 0, entries.get(1).getTimestamp());
-        assertEquals("timestamp should be latest of merged entries", expectedTimestamp.getTime().getTime(), entries.get(2).getTimestamp());
+        assertEquals(0, entries.get(1).getTimestamp(), "timestamp of deleted entry");
+        assertEquals(expectedTimestamp.getTime().getTime(), entries.get(2).getTimestamp(), "timestamp should be latest of merged entries");
 
         ChangedPundle addedPundle = new ChangedPundle("added",
                 PundleType.PACKAGE, "AddedPundle", "42");
@@ -169,16 +169,16 @@ public class StoreChangeLogParserTest {
         ChangedPundle modifiedPundle2 = new ChangedPundle("edited",
                 PundleType.PACKAGE, "ModifiedPundle2", "123");
 
-        assertTrue("first paths", entries.get(0).getAffectedPaths().contains
-                (addedPundle.getDescriptor()));
+        assertTrue(entries.get(0).getAffectedPaths().contains
+                (addedPundle.getDescriptor()), "first paths");
 
         List<String> expectedPaths1 = Arrays.asList(deletedPundle1.getDescriptor(),
                 deletedPundle2.getDescriptor());
-        assertTrue("second paths", entries.get(1).getAffectedPaths().containsAll(expectedPaths1));
+        assertTrue(entries.get(1).getAffectedPaths().containsAll(expectedPaths1), "second paths");
 
         List<String> expectedPaths2 =
                 Arrays.asList(modifiedPundle1.getDescriptor(),
                         modifiedPundle2.getDescriptor());
-        assertTrue("third paths", entries.get(2).getAffectedPaths().containsAll(expectedPaths2));
+        assertTrue(entries.get(2).getAffectedPaths().containsAll(expectedPaths2), "third paths");
     }
 }

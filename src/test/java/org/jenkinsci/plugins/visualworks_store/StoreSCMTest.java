@@ -25,20 +25,20 @@
 package org.jenkinsci.plugins.visualworks_store;
 
 import hudson.util.ArgumentListBuilder;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.*;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class StoreSCMTest {
+class StoreSCMTest {
         private Calendar lastBuildTime;
         private Calendar currentBuildTime;
 
-        @Before
-        public void setUp() {
+    @BeforeEach
+    void setUp() {
                 lastBuildTime = new GregorianCalendar(2012, 2, 7, 15, 28, 35);
                 lastBuildTime.setTimeZone(TimeZone.getTimeZone("GMT"));
 
@@ -46,8 +46,8 @@ public class StoreSCMTest {
                 currentBuildTime.setTimeZone(TimeZone.getTimeZone("GMT"));
         }
 
-        @Test
-        public void preparesPollingCommandForSinglePackage() {
+    @Test
+    void preparesPollingCommandForSinglePackage() {
                 List<PundleSpec> pundles = Arrays.asList(new PundleSpec(PundleType.PACKAGE, "Package"));
                 StoreSCM scm = new StoreSCM("Default", "Repo", pundles, "\\d+", "Development", false, "");
 
@@ -58,8 +58,8 @@ public class StoreSCMTest {
 
         }
 
-        @Test
-        public void preparesPollingCommandForSingleBundle() {
+    @Test
+    void preparesPollingCommandForSingleBundle() {
                 List<PundleSpec> pundles = Arrays.asList(new PundleSpec(PundleType.BUNDLE, "Bundle"));
                 StoreSCM scm = new StoreSCM("Default", "Repo", pundles, "\\d+", "Development", false, "");
 
@@ -68,8 +68,8 @@ public class StoreSCMTest {
                 assertContains(builder.toStringWithQuote(), "-bundle Bundle");
         }
 
-        @Test
-        public void preparesPollingCommandForMultiplePundles() {
+    @Test
+    void preparesPollingCommandForMultiplePundles() {
                 List<PundleSpec> pundles = Arrays.asList(new PundleSpec(PundleType.PACKAGE, "Package"),
                                 new PundleSpec(PundleType.BUNDLE, "Bundle"),
                                 new PundleSpec(PundleType.PACKAGE, "Package with Spaces"));
@@ -81,8 +81,8 @@ public class StoreSCMTest {
                                 "-package Package -bundle Bundle -package \"Package with Spaces\"");
         }
 
-        @Test
-        public void preparesCheckoutCommandForOnePackage() {
+    @Test
+    void preparesCheckoutCommandForOnePackage() {
                 List<PundleSpec> pundles = Arrays.asList(new PundleSpec(PundleType.PACKAGE, "Package"));
                 StoreSCM scm = new StoreSCM("Default", "Repo", pundles, "\\d+", "Development", false, "");
 
@@ -93,8 +93,8 @@ public class StoreSCMTest {
                                 builder.toStringWithQuote());
         }
 
-        @Test
-        public void preparesCheckoutCommandForOneBundle() {
+    @Test
+    void preparesCheckoutCommandForOneBundle() {
                 List<PundleSpec> pundles = Arrays.asList(new PundleSpec(PundleType.BUNDLE, "Bundle"));
                 StoreSCM scm = new StoreSCM("Default", "Repo", pundles, "\\d+", "Development", false, "");
 
@@ -104,8 +104,8 @@ public class StoreSCMTest {
                 assertContains(builder.toStringWithQuote(), "-bundle Bundle");
         }
 
-        @Test
-        public void preparesCheckoutCommandForMultiplePundles() {
+    @Test
+    void preparesCheckoutCommandForMultiplePundles() {
                 List<PundleSpec> pundles = Arrays.asList(new PundleSpec(PundleType.PACKAGE, "Package"),
                                 new PundleSpec(PundleType.BUNDLE, "Bundle"),
                                 new PundleSpec(PundleType.PACKAGE, "Package with Spaces"));
@@ -118,8 +118,8 @@ public class StoreSCMTest {
                                 "-package Package -bundle Bundle -package \"Package with Spaces\"");
         }
 
-        @Test
-        public void preparesCheckoutCommandWithParcelBuilderFile() {
+    @Test
+    void preparesCheckoutCommandWithParcelBuilderFile() {
                 List<PundleSpec> pundles = Arrays.asList(new PundleSpec(PundleType.PACKAGE, "Package"));
                 StoreSCM scm = new StoreSCM("Default", "Repo", pundles, "\\d+", "Development", true, "parcelsToBuild");
 
@@ -130,7 +130,7 @@ public class StoreSCMTest {
         }
 
         private void assertContains(String commandLine, String expectedText) {
-                assertTrue("{" + commandLine + "} doesn't contain {" + expectedText + "}",
-                                commandLine.contains(expectedText));
+                assertTrue(commandLine.contains(expectedText),
+                                "{" + commandLine + "} doesn't contain {" + expectedText + "}");
         }
 }

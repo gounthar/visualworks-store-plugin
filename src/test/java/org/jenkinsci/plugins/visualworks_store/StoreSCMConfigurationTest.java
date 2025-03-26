@@ -25,23 +25,21 @@
 package org.jenkinsci.plugins.visualworks_store;
 
 import hudson.model.FreeStyleProject;
+import org.junit.jupiter.api.Test;
 import org.jvnet.hudson.test.JenkinsRule;
 import org.junit.Rule;
-import org.junit.Test;
 
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class StoreSCMConfigurationTest {
     @Rule
     public JenkinsRule j = new JenkinsRule();
 
     @Test
-    public void testGlobalConfigurationRoundtrip() throws Exception {
+    void testGlobalConfigurationRoundtrip() throws Exception {
         StoreSCM.DescriptorImpl descriptor = j.jenkins.getDescriptorByType(StoreSCM.DescriptorImpl.class);
 
         descriptor.setStoreScripts(new StoreScript("7.7.1", "/path/to/script-7.7.1"),
@@ -50,15 +48,15 @@ public class StoreSCMConfigurationTest {
         j.submit(j.createWebClient().goTo("configure").getFormByName("config"));
 
         StoreScript[] scripts = descriptor.getStoreScripts();
-        assertEquals("installation count", 2, scripts.length);
-        assertEquals("first script name", "7.7.1", scripts[0].getName());
-        assertEquals("first script path", "/path/to/script-7.7.1", scripts[0].getPath());
-        assertEquals("second script name", "7.9.1", scripts[1].getName());
-        assertEquals("second script path", "/path/to/script-7.9.1", scripts[1].getPath());
+        assertEquals(2, scripts.length, "installation count");
+        assertEquals("7.7.1", scripts[0].getName(), "first script name");
+        assertEquals("/path/to/script-7.7.1", scripts[0].getPath(), "first script path");
+        assertEquals("7.9.1", scripts[1].getName(), "second script name");
+        assertEquals("/path/to/script-7.9.1", scripts[1].getPath(), "second script path");
     }
 
     @Test
-    public void testBasicConfigurationRoundtrip() throws Exception {
+    void testBasicConfigurationRoundtrip() throws Exception {
         StoreSCM.DescriptorImpl descriptor = j.jenkins.getDescriptorByType(StoreSCM.DescriptorImpl.class);
         descriptor.setStoreScripts(new StoreScript("theScript", "path"));
 
@@ -66,17 +64,17 @@ public class StoreSCMConfigurationTest {
         StoreSCM scm = new StoreSCM("theScript", "Repo", pundleSpecs, "\\d+", "Integrated", false, "");
         StoreSCM loaded = doRoundtripConfiguration(scm);
 
-        assertEquals("script name", "theScript", loaded.getScriptName());
-        assertEquals("repositoryName", "Repo", loaded.getRepositoryName());
-        assertEquals("pundles", pundleSpecs, loaded.getPundles());
-        assertEquals("versionRegex", "\\d+", loaded.getVersionRegex());
-        assertEquals("minimumBlessingLevel", "Integrated", loaded.getMinimumBlessingLevel());
-        assertFalse("generateParcelBuilderInputFile", loaded.isGenerateParcelBuilderInputFile());
-        assertEquals("parcelBuilderInputFilename", "", loaded.getParcelBuilderInputFilename());
+        assertEquals("theScript", loaded.getScriptName(), "script name");
+        assertEquals("Repo", loaded.getRepositoryName(), "repositoryName");
+        assertEquals(pundleSpecs, loaded.getPundles(), "pundles");
+        assertEquals("\\d+", loaded.getVersionRegex(), "versionRegex");
+        assertEquals("Integrated", loaded.getMinimumBlessingLevel(), "minimumBlessingLevel");
+        assertFalse(loaded.isGenerateParcelBuilderInputFile(), "generateParcelBuilderInputFile");
+        assertEquals("", loaded.getParcelBuilderInputFilename(), "parcelBuilderInputFilename");
     }
 
     @Test
-    public void testConfigurationRoundtripWithMultiplePundles() throws Exception {
+    void testConfigurationRoundtripWithMultiplePundles() throws Exception {
         StoreSCM.DescriptorImpl descriptor = j.jenkins.getDescriptorByType(StoreSCM.DescriptorImpl.class);
         descriptor.setStoreScripts(new StoreScript("theScript", "path"));
 
@@ -85,20 +83,20 @@ public class StoreSCMConfigurationTest {
         StoreSCM scm = new StoreSCM("theScript", "Repo", pundleSpecs, "\\d+", "Integrated", false, "");
         StoreSCM loaded = doRoundtripConfiguration(scm);
 
-        assertEquals("pundles", pundleSpecs, loaded.getPundles());
+        assertEquals(pundleSpecs, loaded.getPundles(), "pundles");
     }
 
     @Test
-    public void testConfigurationRoundtripWithParcelBuilderFile() throws Exception {
+    void testConfigurationRoundtripWithParcelBuilderFile() throws Exception {
         StoreSCM scm = new StoreSCM("script", "Repo", onePundle(), "\\d+", "Integrated", true, "theFilename");
         StoreSCM loaded = doRoundtripConfiguration(scm);
 
-        assertTrue("generateParcelBuilderInputFile", loaded.isGenerateParcelBuilderInputFile());
-        assertEquals("parcelBuilderInputFilename", "theFilename", loaded.getParcelBuilderInputFilename());
+        assertTrue(loaded.isGenerateParcelBuilderInputFile(), "generateParcelBuilderInputFile");
+        assertEquals("theFilename", loaded.getParcelBuilderInputFilename(), "parcelBuilderInputFilename");
     }
 
     @Test
-    public void testLookupStoreScript() {
+    void testLookupStoreScript() {
         StoreSCM.DescriptorImpl descriptor = j.jenkins.getDescriptorByType(StoreSCM.DescriptorImpl.class);
         final StoreScript script = new StoreScript("otherScript", "otherPath");
         descriptor.setStoreScripts(new StoreScript("theScript", "path"), script);

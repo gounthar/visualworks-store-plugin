@@ -24,44 +24,44 @@
 
 package org.jenkinsci.plugins.visualworks_store;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
-public class PundleTypeTest {
+class PundleTypeTest {
     @Test
-    public void packageDescriptionIsCapitalized() {
+    void packageDescriptionIsCapitalized() {
         assertEquals("Package", PundleType.PACKAGE.getDescription());
     }
 
     @Test
-    public void packageNameIsLowercase() {
+    void packageNameIsLowercase() {
         assertEquals("package", PundleType.PACKAGE.getName());
     }
 
     @Test
-    public void bundleDescriptionIsCapitalized() {
+    void bundleDescriptionIsCapitalized() {
         assertEquals("Bundle", PundleType.BUNDLE.getDescription());
     }
 
     @Test
-    public void bundleNameIsLowercase() {
+    void bundleNameIsLowercase() {
         assertEquals("bundle", PundleType.BUNDLE.getName());
     }
 
     @Test
-    public void findsPackageTypeByName() {
+    void findsPackageTypeByName() {
         assertEquals(PundleType.PACKAGE, PundleType.named("package"));
     }
 
     @Test
-    public void findsBundleTypeByName() {
+    void findsBundleTypeByName() {
         assertEquals(PundleType.BUNDLE, PundleType.named("bundle"));
     }
 
     @Test
-    public void returnsNullIfNameNotFound() {
+    void returnsNullIfNameNotFound() {
         assertNull(PundleType.named("unknown"));
     }
 }

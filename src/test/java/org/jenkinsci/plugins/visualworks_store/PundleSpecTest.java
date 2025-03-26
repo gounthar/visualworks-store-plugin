@@ -24,40 +24,40 @@
 
 package org.jenkinsci.plugins.visualworks_store;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
-public class PundleSpecTest {
+class PundleSpecTest {
 
     private PundleSpec spec;
 
-    @Before
-    public void setUp() throws Exception {
+    @BeforeEach
+    void setUp() throws Exception {
         spec = new PundleSpec(PundleType.PACKAGE, "MySpec");
     }
 
     @Test
-    public void isEqualToSelf() {
+    void isEqualToSelf() {
         assertEquals(spec, spec);
     }
 
     @Test
-    public void isEqualIfTypesAndNamesMatch() {
+    void isEqualIfTypesAndNamesMatch() {
         PundleSpec sameName = new PundleSpec(PundleType.PACKAGE, "MySpec");
 
         assertEquals(spec, sameName);
     }
 
     @Test
-    public void notEqualToNull() {
+    void notEqualToNull() {
         assertFalse(spec.equals(null));
     }
 
     @Test
-    public void notEqualIfNamesDiffer() {
+    void notEqualIfNamesDiffer() {
         PundleSpec differentName =
                 new PundleSpec(PundleType.PACKAGE, "differentName");
 
@@ -65,7 +65,7 @@ public class PundleSpecTest {
     }
 
     @Test
-    public void notEqualIfTypesDiffer() {
+    void notEqualIfTypesDiffer() {
         PundleSpec differentType =
                 new PundleSpec(PundleType.BUNDLE, "MySpec");
 

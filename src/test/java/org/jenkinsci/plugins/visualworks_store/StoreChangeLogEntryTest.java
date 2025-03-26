@@ -26,16 +26,16 @@ package org.jenkinsci.plugins.visualworks_store;
 
 import hudson.scm.ChangeLogSet;
 import hudson.scm.EditType;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.text.ParseException;
 import java.util.*;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class StoreChangeLogEntryTest {
+class StoreChangeLogEntryTest {
     private StoreChangeLogEntry entry;
     private String timestampString = "07/02/2012 15:40:19.123";
     private String laterTimestampString = "07/02/2012 15:45:21.456";
@@ -43,8 +43,8 @@ public class StoreChangeLogEntryTest {
     private ChangedPundle editedPundle;
     private ChangedPundle deletedPundle;
 
-    @Before
-    public void setUp() {
+    @BeforeEach
+    void setUp() {
         entry = new StoreChangeLogEntry("committer", timestampString, "blessing comment");
         addedPundle = new ChangedPundle("added", PundleType.PACKAGE, "AddedPundle", "1");
         editedPundle = new ChangedPundle("edited", PundleType.BUNDLE,
@@ -53,12 +53,12 @@ public class StoreChangeLogEntryTest {
     }
 
     @Test
-    public void remembersCommitter() {
+    void remembersCommitter() {
         assertEquals("committer", entry.getCommitter());
     }
 
     @Test
-    public void parsesTimestampStrings() throws ParseException {
+    void parsesTimestampStrings() throws ParseException {
         Calendar expected = new GregorianCalendar(TimeZone.getTimeZone("GMT"));
         expected.set(2012, Calendar.JULY, 2, 15, 40, 19);
         expected.set(Calendar.MILLISECOND, 123);
@@ -67,45 +67,45 @@ public class StoreChangeLogEntryTest {
     }
 
     @Test
-    public void updatesTimestampToNewerOne() {
+    void updatesTimestampToNewerOne() {
         long originalTimestamp = entry.getTimestamp();
 
         entry.updateTimestamp(laterTimestampString);
 
-        assertTrue("timestamp should have been updated", entry.getTimestamp() > originalTimestamp);
+        assertTrue(entry.getTimestamp() > originalTimestamp, "timestamp should have been updated");
     }
 
     @Test
-    public void doesntUpdateTimestampWithOlderOne() {
+    void doesntUpdateTimestampWithOlderOne() {
         entry.updateTimestamp(laterTimestampString);
 
         long originalTimestamp = entry.getTimestamp();
 
         entry.updateTimestamp(timestampString);
 
-        assertEquals("timestamp should not have been updated", originalTimestamp, entry.getTimestamp());
+        assertEquals(originalTimestamp, entry.getTimestamp(), "timestamp should not have been updated");
     }
 
     @Test
-    public void returnsBlessingCommentAsCommitMessage() {
+    void returnsBlessingCommentAsCommitMessage() {
         assertEquals("blessing comment", entry.getMsg());
     }
 
     @Test
-    public void splitsMultilineBlessingComments() {
+    void splitsMultilineBlessingComments() {
         entry = new StoreChangeLogEntry("committer", timestampString, "Comment title.\nDetails 1.\nDetails 2.");
 
-        assertEquals("message", "Comment title.", entry.getMsg());
-        assertEquals("full comment", "Comment title.\nDetails 1.\nDetails 2.", entry.getFullComment());
+        assertEquals("Comment title.", entry.getMsg(), "message");
+        assertEquals("Comment title.\nDetails 1.\nDetails 2.", entry.getFullComment(), "full comment");
     }
 
     @Test
-    public void returnsEmptyAffectedPathsIfNoPundles() {
-        assertTrue("shouldn't have any affected paths", entry.getAffectedPaths().isEmpty());
+    void returnsEmptyAffectedPathsIfNoPundles() {
+        assertTrue(entry.getAffectedPaths().isEmpty(), "shouldn't have any affected paths");
     }
 
     @Test
-    public void returnsPundleDescriptorsAsAffectedPaths() {
+    void returnsPundleDescriptorsAsAffectedPaths() {
         entry.addPundle(addedPundle);
         entry.addPundle(editedPundle);
         entry.addPundle(deletedPundle);
@@ -116,7 +116,7 @@ public class StoreChangeLogEntryTest {
     }
 
     @Test
-    public void returnsAffectedFiles() {
+    void returnsAffectedFiles() {
         entry.addPundle(addedPundle);
         entry.addPundle(editedPundle);
 
