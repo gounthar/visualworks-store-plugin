@@ -59,7 +59,7 @@ public class StoreSCMConfigurationTest {
 
     @Test
     void testBasicConfigurationRoundtrip(JenkinsRule r) throws Exception {
-        StoreSCM.DescriptorImpl descriptor = j.jenkins.getDescriptorByType(StoreSCM.DescriptorImpl.class);
+        StoreSCM.DescriptorImpl descriptor = r.jenkins.getDescriptorByType(StoreSCM.DescriptorImpl.class);
         descriptor.setStoreScripts(new StoreScript("theScript", "path"));
 
         List<PundleSpec> pundleSpecs = onePundle();
@@ -77,7 +77,7 @@ public class StoreSCMConfigurationTest {
 
     @Test
     void testConfigurationRoundtripWithMultiplePundles(JenkinsRule r) throws Exception {
-        StoreSCM.DescriptorImpl descriptor = j.jenkins.getDescriptorByType(StoreSCM.DescriptorImpl.class);
+        StoreSCM.DescriptorImpl descriptor = r.jenkins.getDescriptorByType(StoreSCM.DescriptorImpl.class);
         descriptor.setStoreScripts(new StoreScript("theScript", "path"));
 
         List<PundleSpec> pundleSpecs = Arrays.asList(new PundleSpec(PundleType.PACKAGE, "SomePackage"),
@@ -99,7 +99,7 @@ public class StoreSCMConfigurationTest {
 
     @Test
     void testLookupStoreScript(JenkinsRule r) {
-        StoreSCM.DescriptorImpl descriptor = j.jenkins.getDescriptorByType(StoreSCM.DescriptorImpl.class);
+        StoreSCM.DescriptorImpl descriptor = r.jenkins.getDescriptorByType(StoreSCM.DescriptorImpl.class);
         final StoreScript script = new StoreScript("otherScript", "otherPath");
         descriptor.setStoreScripts(new StoreScript("theScript", "path"), script);
 
