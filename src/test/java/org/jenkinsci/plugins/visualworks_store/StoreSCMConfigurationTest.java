@@ -41,7 +41,7 @@ public class StoreSCMConfigurationTest {
     public JenkinsRule j = new JenkinsRule();
 
     @Test
-    void testGlobalConfigurationRoundtrip(JenkinsRule r) throws Exception {
+    void testGlobalConfigurationRoundtrip(JenkinsRule j) throws Exception {
         StoreSCM.DescriptorImpl descriptor = j.jenkins.getDescriptorByType(StoreSCM.DescriptorImpl.class);
 
         descriptor.setStoreScripts(new StoreScript("7.7.1", "/path/to/script-7.7.1"),
@@ -58,13 +58,13 @@ public class StoreSCMConfigurationTest {
     }
 
     @Test
-    void testBasicConfigurationRoundtrip(JenkinsRule r) throws Exception {
-        StoreSCM.DescriptorImpl descriptor = r.jenkins.getDescriptorByType(StoreSCM.DescriptorImpl.class);
+    void testBasicConfigurationRoundtrip(JenkinsRule j) throws Exception {
+        StoreSCM.DescriptorImpl descriptor = j.jenkins.getDescriptorByType(StoreSCM.DescriptorImpl.class);
         descriptor.setStoreScripts(new StoreScript("theScript", "path"));
 
         List<PundleSpec> pundleSpecs = onePundle();
         StoreSCM scm = new StoreSCM("theScript", "Repo", pundleSpecs, "\\d+", "Integrated", false, "");
-        StoreSCM loaded = doRoundtripConfiguration(scm);
+        StoreSCM loaded = doRoundtripConfiguration(j, scm);
 
         assertEquals("theScript", loaded.getScriptName(), "script name");
         assertEquals("Repo", loaded.getRepositoryName(), "repositoryName");
@@ -76,30 +76,30 @@ public class StoreSCMConfigurationTest {
     }
 
     @Test
-    void testConfigurationRoundtripWithMultiplePundles(JenkinsRule r) throws Exception {
-        StoreSCM.DescriptorImpl descriptor = r.jenkins.getDescriptorByType(StoreSCM.DescriptorImpl.class);
+    void testConfigurationRoundtripWithMultiplePundles(JenkinsRule j) throws Exception {
+        StoreSCM.DescriptorImpl descriptor = j.jenkins.getDescriptorByType(StoreSCM.DescriptorImpl.class);
         descriptor.setStoreScripts(new StoreScript("theScript", "path"));
 
         List<PundleSpec> pundleSpecs = Arrays.asList(new PundleSpec(PundleType.PACKAGE, "SomePackage"),
                 new PundleSpec(PundleType.BUNDLE, "SomeBundle"));
         StoreSCM scm = new StoreSCM("theScript", "Repo", pundleSpecs, "\\d+", "Integrated", false, "");
-        StoreSCM loaded = doRoundtripConfiguration(scm);
+        StoreSCM loaded = doRoundtripConfiguration(j, scm);
 
         assertEquals(pundleSpecs, loaded.getPundles(), "pundles");
     }
 
     @Test
-    void testConfigurationRoundtripWithParcelBuilderFile(JenkinsRule r) throws Exception {
+    void testConfigurationRoundtripWithParcelBuilderFile(JenkinsRule j) throws Exception {
         StoreSCM scm = new StoreSCM("script", "Repo", onePundle(), "\\d+", "Integrated", true, "theFilename");
-        StoreSCM loaded = doRoundtripConfiguration(scm);
+        StoreSCM loaded = doRoundtripConfiguration(j, scm);
 
         assertTrue(loaded.isGenerateParcelBuilderInputFile(), "generateParcelBuilderInputFile");
         assertEquals("theFilename", loaded.getParcelBuilderInputFilename(), "parcelBuilderInputFilename");
     }
 
     @Test
-    void testLookupStoreScript(JenkinsRule r) {
-        StoreSCM.DescriptorImpl descriptor = r.jenkins.getDescriptorByType(StoreSCM.DescriptorImpl.class);
+    void testLookupStoreScript(JenkinsRule j) {
+        StoreSCM.DescriptorImpl descriptor = j.jenkins.getDescriptorByType(StoreSCM.DescriptorImpl.class);
         final StoreScript script = new StoreScript("otherScript", "otherPath");
         descriptor.setStoreScripts(new StoreScript("theScript", "path"), script);
 
@@ -108,7 +108,7 @@ public class StoreSCMConfigurationTest {
         assertEquals(script, scm.getStoreScript());
     }
 
-    private StoreSCM doRoundtripConfiguration(StoreSCM original) throws Exception {
+    private StoreSCM doRoundtripConfiguration(JenkinsRule j, StoreSCM original) throws Exception {
         FreeStyleProject p = j.createFreeStyleProject();
         p.setScm(original);
 
